@@ -1,0 +1,349 @@
+Name - Atharva Ubhe
+SRN - 31242597
+Roll no. - 55
+Div - E
+Batch - E3
+
+
+mysql> CREATE TABLE branch( branch_name VARCHAR(50) PRIMARY KEY, branch_city VARCHAR(50) NOT NULL, assets DECIMAL(15,2) CHECK (assets >= 0));
+Query OK, 0 rows affected (0.17 sec)
+
+mysql> INSERT INTO branch VALUES('Shivaji nagar', 'Pune', 5000000), ('MG Road', 'Mumbai', 3000000), ('Camp', 'Pune', 4000000), ('Sharanpur road', 'Nashik', 3500000);
+Query OK, 4 rows affected (0.04 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from branch;
++----------------+-------------+------------+
+| branch_name    | branch_city | assets     |
++----------------+-------------+------------+
+| Camp           | Pune        | 4000000.00 |
+| MG Road        | Mumbai      | 3000000.00 |
+| Sharanpur road | Nashik      | 3500000.00 |
+| Shivaji nagar  | Pune        | 5000000.00 |
++----------------+-------------+------------+
+4 rows in set (0.00 sec)
+
+mysql> CREATE TABLE account(acc_no INT PRIMARY KEY, branch_name VARCHAR(50), balance DECIMAL(12,2) NOT NULL CHECK (balance >= 0), FOREIGN KEY (branch_name) REFERENCES branch(branch_name));
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> INSERT INTO account VALUES (101, 'Shivaji nagar', 15000),(102, 'MG Road', 10000),(103, 'Camp', 25000),(104, 'Sharanpur road', 8000),(105, 'Shivaji nagar', 13000);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from account;
++--------+----------------+----------+
+| acc_no | branch_name    | balance  |
++--------+----------------+----------+
+|    101 | Shivaji nagar  | 15000.00 |
+|    102 | MG Road        | 10000.00 |
+|    103 | Camp           | 25000.00 |
+|    104 | Sharanpur road |  8000.00 |
+|    105 | Shivaji nagar  | 13000.00 |
++--------+----------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> CREATE TABLE customer(cust_name VARCHAR(50) PRIMARY KEY, cust_street VARCHAR(100),  cust_city VARCHAR(50));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> INSERT INTO customer VALUES ('Alice', 'Karve Road', 'Pune'),('Bob', 'Churchgate', 'Mumbai'), ('Charlie', 'Deccan', 'Pune'),('David', 'MG Road', 'Mumbai'),('Eve', 'College Road', 'Nashik'), ('Frank', 'Jangli Maharaj', 'Pune');
+Query OK, 6 rows affected (0.02 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select * from customer;
++-----------+----------------+-----------+
+| cust_name | cust_street    | cust_city |
++-----------+----------------+-----------+
+| Alice     | Karve Road     | Pune      |
+| Bob       | Churchgate     | Mumbai    |
+| Charlie   | Deccan         | Pune      |
+| David     | MG Road        | Mumbai    |
+| Eve       | College Road   | Nashik    |
+| Frank     | Jangli Maharaj | Pune      |
++-----------+----------------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> CREATE TABLE depositor(cust_name VARCHAR(50), acc_no INT, PRIMARY KEY (cust_name, acc_no), FOREIGN KEY (cust_name) REFERENCES customer(cust_name), FOREIGN KEY (acc_no) REFERENCES account(acc_no));
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> INSERT INTO depositor VALUES ('Alice', 101),('Bob', 102),('Charlie', 103),('David', 104),('Frank', 105);
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from depositer;
+ERROR 1146 (42S02): Table 'assignment3.depositer' doesn't exist
+mysql> select * from depositor;
++-----------+--------+
+| cust_name | acc_no |
++-----------+--------+
+| Alice     |    101 |
+| Bob       |    102 |
+| Charlie   |    103 |
+| David     |    104 |
+| Frank     |    105 |
++-----------+--------+
+5 rows in set (0.00 sec)
+
+mysql> CREATE TABLE loan(loan_no INT PRIMARY KEY, branch_name VARCHAR(50), amount DECIMAL(12,2) NOT NULL CHECK (amount >= 0), FOREIGN KEY (branch_name) REFERENCES branch(branch_name));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> INSERT INTO loan VALUES (201, 'Shivaji nagar', 20000),(202, 'MG Road', 15000),(203, 'Camp', 5000),(204, 'Shivaji nagar', 1300),(205, 'Sharanpur road', 1400);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from loan;
++---------+----------------+----------+
+| loan_no | branch_name    | amount   |
++---------+----------------+----------+
+|     201 | Shivaji nagar  | 20000.00 |
+|     202 | MG Road        | 15000.00 |
+|     203 | Camp           |  5000.00 |
+|     204 | Shivaji nagar  |  1300.00 |
+|     205 | Sharanpur road |  1400.00 |
++---------+----------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> CREATE TABLE borrower(cust_name VARCHAR(50), loan_no INT, PRIMARY KEY (cust_name, loan_no), FOREIGN KEY (cust_name) REFERENCES customer(cust_name), FOREIGN KEY (loan_no) REFERENCES loan(loan_no));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> INSERT INTO borrower VALUES ('Alice', 201),('Charlie', 202),('Eve', 203),('Frank', 204),('Bob', 205);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from borrower;
++-----------+---------+
+| cust_name | loan_no |
++-----------+---------+
+| Alice     |     201 |
+| Charlie   |     202 |
+| Eve       |     203 |
+| Frank     |     204 |
+| Bob       |     205 |
++-----------+---------+
+5 rows in set (0.00 sec)
+
+mysql> --1. Find the names of all branches in loan relation.
+mysql> SELECT DISTINCT branch_name FROM loan;
++----------------+
+| branch_name    |
++----------------+
+| Camp           |
+| MG Road        |
+| Sharanpur road |
+| Shivaji nagar  |
++----------------+
+4 rows in set (0.01 sec)
+
+
+mysql> --2. Find all loan numbers for loans made at Shivaji nagar Branch with loan amount > 12000. 
+mysql> SELECT loan_no FROM loan WHERE branch_name = 'Shivaji nagar' AND amount > 12000;
++---------+
+| loan_no |
++---------+
+|     201 |
++---------+
+1 row in set (0.01 sec)
+
+mysql> --3. Find all customers who have a loan from bank. Find their names,loan_no and loan amount.
+mysql> SELECT b.cust_name, l.loan_no, l.amount FROM borrower b JOIN loan l ON b.loan_no = l.loan_no;
++-----------+---------+----------+
+| cust_name | loan_no | amount   |
++-----------+---------+----------+
+| Alice     |     201 | 20000.00 |
+| Charlie   |     202 | 15000.00 |
+| Eve       |     203 |  5000.00 |
+| Frank     |     204 |  1300.00 |
+| Bob       |     205 |  1400.00 |
++-----------+---------+----------+
+5 rows in set (0.00 sec)
+
+mysql> --4. List all customers in alphabetical order who have loan from Shivaji nagar branch. 
+mysql> SELECT DISTINCT b.cust_name FROM borrower b JOIN loan l ON b.loan_no = l.loan_no WHERE l.branch_name = 'Shivaji nagar' ORDER BY b.cust_name;
++-----------+
+| cust_name |
++-----------+
+| Alice     |
+| Frank     |
++-----------+
+2 rows in set (0.00 sec)
+
+
+mysql> --5. Find all customers who have an account or loan or both at bank. 
+mysql> SELECT DISTINCT cust_name FROM depositor UNION SELECT DISTINCT cust_name FROM borrower;
++-----------+
+| cust_name |
++-----------+
+| Alice     |
+| Bob       |
+| Charlie   |
+| David     |
+| Frank     |
+| Eve       |
++-----------+
+6 rows in set (0.00 sec)
+
+mysql> --6. Find all customers who have both account and loan at bank. 
+mysql> SELECT DISTINCT d.cust_name FROM depositor d INNER JOIN borrower b ON d.cust_name = b.cust_name;
++-----------+
+| cust_name |
++-----------+
+| Alice     |
+| Bob       |
+| Charlie   |
+| Frank     |
++-----------+
+4 rows in set (0.00 sec)
+
+mysql> --7. Find all customer who have account but no loan at the bank. 
+mysql> SELECT DISTINCT d.cust_name FROM depositor d WHERE d.cust_name NOT IN (SELECT cust_name FROM borrower);
++-----------+
+| cust_name |
++-----------+
+| David     |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> --8. Find average account balance at Shivaji nagar  branch. 
+mysql> SELECT AVG(balance) AS avg_balance FROM account WHERE branch_name = 'Shivaji nagar';
++--------------+
+| avg_balance  |
++--------------+
+| 14000.000000 |
++--------------+
+1 row in set (0.02 sec)
+
+mysql> --9. Find the average account balance at each branch
+mysql> SELECT branch_name, AVG(balance) AS avg_balance FROM account GROUP BY branch_name;
++----------------+--------------+
+| branch_name    | avg_balance  |
++----------------+--------------+
+| Camp           | 25000.000000 |
+| MG Road        | 10000.000000 |
+| Sharanpur road |  8000.000000 |
+| Shivaji nagar  | 14000.000000 |
++----------------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> --10. Find no. of depositors at each branch. 
+mysql> SELECT a.branch_name, COUNT(DISTINCT d.cust_name) AS num_depositors FROM depositor d JOIN account a ON d.acc_no = a.acc_no GROUP BY a.branch_name;
++----------------+----------------+
+| branch_name    | num_depositors |
++----------------+----------------+
+| Camp           |              1 |
+| MG Road        |              1 |
+| Sharanpur road |              1 |
+| Shivaji nagar  |              2 |
++----------------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> --11. Find the branches where average account balance > 12000. 
+mysql> SELECT branch_name FROM account GROUP BY branch_name HAVING AVG(balance) > 12000;
++---------------+
+| branch_name   |
++---------------+
+| Camp          |
+| Shivaji nagar |
++---------------+
+2 rows in set (0.00 sec)
+
+mysql> --12. Find number of tuples in customer relation. 
+mysql> SELECT COUNT(*) AS total_customers FROM customer;
++-----------------+
+| total_customers |
++-----------------+
+|               6 |
++-----------------+
+1 row in set (0.01 sec)
+
+mysql> --13. Calculate total loan amount given by bank.
+mysql> SELECT SUM(amount) AS total_loan_amount FROM loan;
++-------------------+
+| total_loan_amount |
++-------------------+
+|          42700.00 |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> --14. Delete all loans with loan amount between 1300 and 1500. 
+mysql> DELETE FROM loan WHERE amount BETWEEN 1300 AND 1500;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`assignment3`.`borrower`, CONSTRAINT `borrower_ibfk_2` FOREIGN KEY (`loan_no`) REFERENCES `loan` (`loan_no`))
+
+mysql> --15. Delete all tuples at every branch located in Sharanpur road.
+mysql> DELETE FROM branch WHERE branch_city = 'Sharanpur road';
+Query OK, 0 rows affected (0.00 sec)
+
+
+mysql> CREATE TABLE employee(empno INT AUTO_INCREMENT PRIMARY KEY, empname VARCHAR(100), designation VARCHAR(100), city VARCHAR(100), salary DECIMAL(10,2), zipcode VARCHAR(10), county VARCHAR(10));
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> INSERT INTO employee (empname, designation, city, salary, zipcode, county)
+    -> VALUES 
+    -> ('Aarav Sharma', 'Manager', 'Mumbai', 65000, '400001', '071'),
+    -> ('Neha Verma', 'Accountant', 'Delhi', 48000, '110001', '072'),
+    -> ('Rohan Mehta', 'Clerk', 'Mumbai', 35000, '400002', '071'),
+    -> ('Sonal Kapoor', 'HR', 'Pune', 42000, '411001', '073'),
+    -> ('Imran Khan', 'Developer', 'Hyderabad', 56000, '500001', '074'),
+    -> ('Priya Desai', 'Analyst', 'Mumbai', 30000, '400003', '071'),
+    -> ('Vikram Reddy', 'Manager', 'Chennai', 70000, '600001', '075'),
+    -> ('Meera Joshi', 'Intern', 'Mumbai', 18000, '400004', '071'),
+    -> ('Raj Patel', 'Engineer', 'Ahmedabad', 55000, '380001', '076'),
+    -> ('Tina Agarwal', 'Support', 'Delhi', 46000, '110002', '072');
+Query OK, 10 rows affected (0.02 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee;
++-------+--------------+-------------+-----------+----------+---------+--------+
+| empno | empname      | designation | city      | salary   | zipcode | county |
++-------+--------------+-------------+-----------+----------+---------+--------+
+|     1 | Aarav Sharma | Manager     | Mumbai    | 65000.00 | 400001  | 071    |
+|     2 | Neha Verma   | Accountant  | Delhi     | 48000.00 | 110001  | 072    |
+|     3 | Rohan Mehta  | Clerk       | Mumbai    | 35000.00 | 400002  | 071    |
+|     4 | Sonal Kapoor | HR          | Pune      | 42000.00 | 411001  | 073    |
+|     5 | Imran Khan   | Developer   | Hyderabad | 56000.00 | 500001  | 074    |
+|     6 | Priya Desai  | Analyst     | Mumbai    | 30000.00 | 400003  | 071    |
+|     7 | Vikram Reddy | Manager     | Chennai   | 70000.00 | 600001  | 075    |
+|     8 | Meera Joshi  | Intern      | Mumbai    | 18000.00 | 400004  | 071    |
+|     9 | Raj Patel    | Engineer    | Ahmedabad | 55000.00 | 380001  | 076    |
+|    10 | Tina Agarwal | Support     | Delhi     | 46000.00 | 110002  | 072    |
++-------+--------------+-------------+-----------+----------+---------+--------+
+10 rows in set (0.00 sec)
+
+mysql> CREATE INDEX idx_county ON employee(county);
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SHOW INDEX FROM employee;
++----------+------------+------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table    | Non_unique | Key_name   | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++----------+------------+------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| employee |          0 | PRIMARY    |            1 | empno       | A         |          10 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| employee |          1 | idx_county |            1 | county      | A         |           6 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++----------+------------+------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+2 rows in set (0.02 sec)
+
+mysql> EXPLAIN SELECT zipcode FROM employee WHERE county = '071';
++----+-------------+----------+------------+------+---------------+------------+---------+-------+------+----------+-------+
+| id | select_type | table    | partitions | type | possible_keys | key        | key_len | ref   | rows | filtered | Extra |
++----+-------------+----------+------------+------+---------------+------------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | employee | NULL       | ref  | idx_county    | idx_county | 43      | const |    4 |   100.00 | NULL  |
++----+-------------+----------+------------+------+---------------+------------+---------+-------+------+----------+-------+
+1 row in set, 1 warning (0.01 sec)
+
+mysql> CREATE VIEW view_mumbai_low_salary AS
+    -> SELECT empno, empname, designation, city, salary
+    -> FROM employee
+    -> WHERE city = 'Mumbai' AND salary < 50000;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM view_mumbai_low_salary;
++-------+-------------+-------------+--------+----------+
+| empno | empname     | designation | city   | salary   |
++-------+-------------+-------------+--------+----------+
+|     3 | Rohan Mehta | Clerk       | Mumbai | 35000.00 |
+|     6 | Priya Desai | Analyst     | Mumbai | 30000.00 |
+|     8 | Meera Joshi | Intern      | Mumbai | 18000.00 |
++-------+-------------+-------------+--------+----------+
+3 rows in set (0.01 sec)
+
+mysql> notee;
+
+

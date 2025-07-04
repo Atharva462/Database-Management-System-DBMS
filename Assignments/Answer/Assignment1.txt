@@ -1,0 +1,277 @@
+Name - Atharva Dnyaneshwar Ubhe
+SRN - 31242597
+Roll no. - 55
+Div - E
+Batch - E3
+
+
+mysql> create table teaminfo(id int primary key auto_increment, name varchar(50), country varchar(50), estyear year(4));
+Query OK, 0 rows affected, 1 warning (0.08 sec)
+
+mysql> desc teaminfo;
++---------+-------------+------+-----+---------+----------------+
+| Field   | Type        | Null | Key | Default | Extra          |
++---------+-------------+------+-----+---------+----------------+
+| id      | int         | NO   | PRI | NULL    | auto_increment |
+| name    | varchar(50) | YES  |     | NULL    |                |
+| country | varchar(50) | YES  |     | NULL    |                |
+| estyear | year        | YES  |     | NULL    |                |
++---------+-------------+------+-----+---------+----------------+
+4 rows in set (0.04 sec)
+
+mysql> insert into teaminfo(id, name, country, estyear) values (1, 'india', 'india', 1932), (2, 'australia', 'australia', 1877), (3, 'england', 'england', 1877), (4, 'south africa', 'south africa', 1889), (5, 'pakistan', 'pakistan', 1952), (6, 'new zealand', 'new zealand', 1930), (7, 'west indies', 'west indies', 1928), (8, 'sri lanka', 'sri lanka', 1982), (9, 'bangladesh', 'bangladesh', 2000), (10, 'afghanistan', 'afghanistan', 2017);
+ERROR 1264 (22003): Out of range value for column 'estyear' at row 2
+mysql> insert into teaminfo(id, name, country, estyear) values (1, 'india', 'india', 1932), (2, 'australia', 'australia', 1933), (3, 'england', 'england', 1934), (4, 'south africa', 'south africa', 1935), (5, 'pakistan', 'pakistan', 1937), (6, 'new zealand', 'new zealand', 1939), (7, 'west indies', 'west indies', 1940), (8, 'sri lanka', 'sri lanka', 1942), (9, 'bangladesh', 'bangladesh', 1944), (10, 'afghanistan', 'afghanistan', 1946);
+Query OK, 10 rows affected (0.02 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from teaminfo;
++----+--------------+--------------+---------+
+| id | name         | country      | estyear |
++----+--------------+--------------+---------+
+|  1 | india        | india        |    1932 |
+|  2 | australia    | australia    |    1933 |
+|  3 | england      | england      |    1934 |
+|  4 | south africa | south africa |    1935 |
+|  5 | pakistan     | pakistan     |    1937 |
+|  6 | new zealand  | new zealand  |    1939 |
+|  7 | west indies  | west indies  |    1940 |
+|  8 | sri lanka    | sri lanka    |    1942 |
+|  9 | bangladesh   | bangladesh   |    1944 |
+| 10 | afghanistan  | afghanistan  |    1946 |
++----+--------------+--------------+---------+
+10 rows in set (0.00 sec)
+
+mysql> create table matchinfo(id int primary key auto_increment, location varchar(50), starttime time, endtime time, matchdate date, teamid int, oppositionteamid int, wonteamid int, umpirename varchar(50), type varchar(50), foreign key (teamid) references teaminfo(id), foreign key (oppositionteamid) references teaminfo(id), foreign key (wonteamid) references teaminfo(id));
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> desc matchinfo;
++------------------+-------------+------+-----+---------+----------------+
+| Field            | Type        | Null | Key | Default | Extra          |
++------------------+-------------+------+-----+---------+----------------+
+| id               | int         | NO   | PRI | NULL    | auto_increment |
+| location         | varchar(50) | YES  |     | NULL    |                |
+| starttime        | time        | YES  |     | NULL    |                |
+| endtime          | time        | YES  |     | NULL    |                |
+| matchdate        | date        | YES  |     | NULL    |                |
+| teamid           | int         | YES  | MUL | NULL    |                |
+| oppositionteamid | int         | YES  | MUL | NULL    |                |
+| wonteamid        | int         | YES  | MUL | NULL    |                |
+| umpirename       | varchar(50) | YES  |     | NULL    |                |
+| type             | varchar(50) | YES  |     | NULL    |                |
++------------------+-------------+------+-----+---------+----------------+
+10 rows in set (0.01 sec)
+
+mysql> insert into matchinfo (id, location, starttime, endtime, matchdate, teamid, oppositionteamid, wonteamid, umpirename, type) values (1, 'mumbai', '10:00:00', '18:00:00', '2024-02-01', 1, 2, 1, 'aleem dar', 'test'), (2, 'sydney', '09:30:00', '17:30:00', '2024-02-05', 2, 3, 3, 'richard kettleborough', 'odi'), (3, 'lahore', '11:00:00', '19:00:00', '2024-02-10', 5, 7, 5, 'kumar dharmasena', 't20'), (4, 'wellington', '10:15:00', '18:45:00', '2024-02-15', 6, 8, 6, 'nitin menon', 'test'), (5, 'cape town', '09:45:00', '17:00:00', '2024-02-20', 4, 9, 4, 'chris gaffaney', 'odi'), (6, 'colombo', '12:00:00', '20:00:00', '2024-02-25', 8, 10, 8, 'paul reiffel', 't20'), (7, 'dhaka', '10:30:00', '18:15:00', '2024-03-01', 9, 1, 1, 'marais erasmus', 'odi'), (8, 'melbourne', '09:00:00', '17:00:00', '2024-03-05', 2, 6, 2, 'rod tucker', 'test'), (9, 'barbados', '11:30:00', '19:30:00', '2024-03-10', 7, 3, 3, 'bruce oxenford', 't20'), (10, 'karachi', '10:45:00', '19:15:00', '2024-03-15', 5, 4, 5, 'joel wilson', 'odi');
+Query OK, 10 rows affected (0.02 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from matchinfo;
++----+------------+-----------+----------+------------+--------+------------------+-----------+-----------------------+------+
+| id | location   | starttime | endtime  | matchdate  | teamid | oppositionteamid | wonteamid | umpirename            | type |
++----+------------+-----------+----------+------------+--------+------------------+-----------+-----------------------+------+
+|  1 | mumbai     | 10:00:00  | 18:00:00 | 2024-02-01 |      1 |                2 |         1 | aleem dar             | test |
+|  2 | sydney     | 09:30:00  | 17:30:00 | 2024-02-05 |      2 |                3 |         3 | richard kettleborough | odi  |
+|  3 | lahore     | 11:00:00  | 19:00:00 | 2024-02-10 |      5 |                7 |         5 | kumar dharmasena      | t20  |
+|  4 | wellington | 10:15:00  | 18:45:00 | 2024-02-15 |      6 |                8 |         6 | nitin menon           | test |
+|  5 | cape town  | 09:45:00  | 17:00:00 | 2024-02-20 |      4 |                9 |         4 | chris gaffaney        | odi  |
+|  6 | colombo    | 12:00:00  | 20:00:00 | 2024-02-25 |      8 |               10 |         8 | paul reiffel          | t20  |
+|  7 | dhaka      | 10:30:00  | 18:15:00 | 2024-03-01 |      9 |                1 |         1 | marais erasmus        | odi  |
+|  8 | melbourne  | 09:00:00  | 17:00:00 | 2024-03-05 |      2 |                6 |         2 | rod tucker            | test |
+|  9 | barbados   | 11:30:00  | 19:30:00 | 2024-03-10 |      7 |                3 |         3 | bruce oxenford        | t20  |
+| 10 | karachi    | 10:45:00  | 19:15:00 | 2024-03-15 |      5 |                4 |         5 | joel wilson           | odi  |
++----+------------+-----------+----------+------------+--------+------------------+-----------+-----------------------+------+
+10 rows in set (0.00 sec)
+
+mysql> create table playerinfo(id int primary key auto_increment, name varchar(50), birthdate date, joinedyear year(4), retirementyear year(4), runs int default 0, wickets int default 0);
+Query OK, 0 rows affected, 2 warnings (0.07 sec)
+
+mysql> desc playerinfo;
++----------------+-------------+------+-----+---------+----------------+
+| Field          | Type        | Null | Key | Default | Extra          |
++----------------+-------------+------+-----+---------+----------------+
+| id             | int         | NO   | PRI | NULL    | auto_increment |
+| name           | varchar(50) | YES  |     | NULL    |                |
+| birthdate      | date        | YES  |     | NULL    |                |
+| joinedyear     | year        | YES  |     | NULL    |                |
+| retirementyear | year        | YES  |     | NULL    |                |
+| runs           | int         | YES  |     | 0       |                |
+| wickets        | int         | YES  |     | 0       |                |
++----------------+-------------+------+-----+---------+----------------+
+7 rows in set (0.01 sec)
+
+mysql> insert into playerinfo (id, name, birthdate, joinedyear, retirementyear, runs, wickets) values (1, 'virat kohli', '1988-11-05', 2008, null, 26000, 4), (2, 'steve smith', '1989-06-02', 2010, null, 18000, 10), (3, 'joe root', '1990-12-30', 2012, null, 19000, 30), (4, 'kane williamson', '1990-08-08', 2010, null, 17000, 10), (5, 'babar azam', '1994-10-15', 2015, null, 14000, 5), (6, 'david warner', '1986-10-27', 2009, null, 17000, 2), (7, 'rohit sharma', '1987-04-30', 2007, null, 18000, 10), (8, 'shakib al hasan', '1987-03-24', 2006, null, 13000, 350), (9, 'rashid khan', '1998-09-20', 2015, null, 1000, 500), (10, 'chris gayle', '1979-09-21', 1999, 2022, 22000, 80);
+Query OK, 10 rows affected (0.02 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from playerinfo;
++----+-----------------+------------+------------+----------------+-------+---------+
+| id | name            | birthdate  | joinedyear | retirementyear | runs  | wickets |
++----+-----------------+------------+------------+----------------+-------+---------+
+|  1 | virat kohli     | 1988-11-05 |       2008 |           NULL | 26000 |       4 |
+|  2 | steve smith     | 1989-06-02 |       2010 |           NULL | 18000 |      10 |
+|  3 | joe root        | 1990-12-30 |       2012 |           NULL | 19000 |      30 |
+|  4 | kane williamson | 1990-08-08 |       2010 |           NULL | 17000 |      10 |
+|  5 | babar azam      | 1994-10-15 |       2015 |           NULL | 14000 |       5 |
+|  6 | david warner    | 1986-10-27 |       2009 |           NULL | 17000 |       2 |
+|  7 | rohit sharma    | 1987-04-30 |       2007 |           NULL | 18000 |      10 |
+|  8 | shakib al hasan | 1987-03-24 |       2006 |           NULL | 13000 |     350 |
+|  9 | rashid khan     | 1998-09-20 |       2015 |           NULL |  1000 |     500 |
+| 10 | chris gayle     | 1979-09-21 |       1999 |           2022 | 22000 |      80 |
++----+-----------------+------------+------------+----------------+-------+---------+
+10 rows in set (0.00 sec)
+
+mysql> create table matchplayedplayerinfo (matchid int, teamid int, playerid int, playingas varchar(50), foreign key (matchid) references matchinfo(id), foreign key (teamid) references teaminfo(id), foreign key (playerid) references playerinfo(id));
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> desc matchplayedplayerinfo;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| matchid   | int         | YES  | MUL | NULL    |       |
+| teamid    | int         | YES  | MUL | NULL    |       |
+| playerid  | int         | YES  | MUL | NULL    |       |
+| playingas | varchar(50) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> insert into matchplayedplayerinfo (matchid, teamid, playerid, playingas) values (1, 1, 1, 'batsman'), (2, 2, 2, 'batsman'), (3, 3, 3, 'batsman'), (4, 4, 4, 'batsman'), (5, 5, 5, 'batsman'), (6, 6, 6, 'batsman'), (7, 7, 7, 'batsman'), (8, 8, 8, 'all-rounder'), (9, 9, 9, 'bowler'), (10, 10, 10, 'batsman');
+Query OK, 10 rows affected (0.02 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from matchplayedplayerinfo;
++---------+--------+----------+-------------+
+| matchid | teamid | playerid | playingas   |
++---------+--------+----------+-------------+
+|       1 |      1 |        1 | batsman     |
+|       2 |      2 |        2 | batsman     |
+|       3 |      3 |        3 | batsman     |
+|       4 |      4 |        4 | batsman     |
+|       5 |      5 |        5 | batsman     |
+|       6 |      6 |        6 | batsman     |
+|       7 |      7 |        7 | batsman     |
+|       8 |      8 |        8 | all-rounder |
+|       9 |      9 |        9 | bowler      |
+|      10 |     10 |       10 | batsman     |
++---------+--------+----------+-------------+
+10 rows in set (0.00 sec)
+
+mysql> --1.List names of the umpire when Indian team won
+mysql> select umpirename from matchinfo where wonteamid = 1;
++----------------+
+| umpirename     |
++----------------+
+| aleem dar      |
+| marais erasmus |
++----------------+
+2 rows in set (0.01 sec)
+
+mysql> --2.List names of the players who have not played single match.
+mysql> select name from playerinfo where id not in (select distinct playerid from matchplayedplayerinfo);
+Empty set (0.01 sec)
+
+mysql> --3.Find batsman scored maximum runs and batsman scored minimum runs and display their names
+mysql> select name from playerinfo where runs = (select max(runs) from playerinfo) or runs = (select min(runs) from playerinfo);
++-------------+
+| name        |
++-------------+
+| virat kohli |
+| rashid khan |
++-------------+
+2 rows in set (0.01 sec)
+
+mysql> --4.Find bowler who has taken maximum wickets and bowler taken minimum wickets and display their names
+mysql> select name from playerinfo where wickets = (select max(wickets) from playerinfo) or wickets = (select min(wickets) from playerinfo);
++--------------+
+| name         |
++--------------+
+| david warner |
+| rashid khan  |
++--------------+
+2 rows in set (0.00 sec)
+
+mysql> --5.List name of all players for given country and number of matches he has played
+mysql> select p.name, count(m.matchid) as total_matches from playerinfo p left join matchplayedplayerinfo m on p.id = m.playerid left join teaminfo t on m.teamid = t.id where t.country = 'india' group by p.name;
++-------------+---------------+
+| name        | total_matches |
++-------------+---------------+
+| virat kohli |             1 |
++-------------+---------------+
+1 row in set (0.01 sec)
+
+mysql> --6.List names of the countries who played matches on given location
+mysql> select distinct teaminfo.country from matchinfo join teaminfo on matchinfo.teamid = teaminfo.id or matchinfo.oppositionteamid = teaminfo.id where matchinfo.location = 'mumbai';
++-----------+
+| country   |
++-----------+
+| india     |
+| australia |
++-----------+
+2 rows in set (0.00 sec)
+
+mysql> --7.List team name and location of the matches they played
+mysql> select teaminfo.name, matchinfo.location from teaminfo join matchinfo on teaminfo.id = matchinfo.teamid or teaminfo.id = matchinfo.oppositionteamid;
++--------------+------------+
+| name         | location   |
++--------------+------------+
+| india        | mumbai     |
+| india        | dhaka      |
+| australia    | mumbai     |
+| australia    | sydney     |
+| australia    | melbourne  |
+| england      | sydney     |
+| england      | barbados   |
+| south africa | cape town  |
+| south africa | karachi    |
+| pakistan     | lahore     |
+| pakistan     | karachi    |
+| new zealand  | wellington |
+| new zealand  | melbourne  |
+| west indies  | lahore     |
+| west indies  | barbados   |
+| sri lanka    | wellington |
+| sri lanka    | colombo    |
+| bangladesh   | cape town  |
+| bangladesh   | dhaka      |
+| afghanistan  | colombo    |
++--------------+------------+
+20 rows in set (0.01 sec)
+
+mysql> --8. List names of teams who have never played any matches.
+mysql> select name from teaminfo where id not in (select distinct teamid from matchinfo) and id not in (select distinct oppositionteamid from matchinfo);
+Empty set (0.01 sec)
+
+mysql> --9.List names of the countries and total matches they played
+mysql> select teaminfo.country, count(matchinfo.id) as total_matches from teaminfo join matchinfo on teaminfo.id = matchinfo.teamid or teaminfo.id = matchinfo.oppositionteamid group by teaminfo.country;
++--------------+---------------+
+| country      | total_matches |
++--------------+---------------+
+| india        |             2 |
+| australia    |             3 |
+| england      |             2 |
+| pakistan     |             2 |
+| west indies  |             2 |
+| new zealand  |             2 |
+| sri lanka    |             2 |
+| south africa |             2 |
+| bangladesh   |             2 |
+| afghanistan  |             1 |
++--------------+---------------+
+10 rows in set (0.00 sec)
+
+mysql> --10.List name of team, and name of teams against which they played matches and count they won
+mysql> select t1.name as team_name, t2.name as opposition_team, count(m.wonteamid) as matches_won from matchinfo m join teaminfo t1 on m.teamid = t1.id join teaminfo t2 on m.oppositionteamid = t2.id where m.wonteamid = t1.id group by t1.name, t2.name;
++--------------+-----------------+-------------+
+| team_name    | opposition_team | matches_won |
++--------------+-----------------+-------------+
+| india        | australia       |           1 |
+| australia    | new zealand     |           1 |
+| south africa | bangladesh      |           1 |
+| pakistan     | west indies     |           1 |
+| pakistan     | south africa    |           1 |
+| new zealand  | sri lanka       |           1 |
+| sri lanka    | afghanistan     |           1 |
++--------------+-----------------+-------------+
+7 rows in set (0.01 sec)
+
+mysql> notee;

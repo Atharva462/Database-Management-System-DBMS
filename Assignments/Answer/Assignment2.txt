@@ -1,0 +1,278 @@
+Name - Atharva Dnyaneshwar Ubhe
+SRN - 31242597
+Roll no. - 55
+Div - E
+Batch - E3
+
+
+mysql> create table student(studentid int primary key, studentname varchar(20), instructorid int, studentcity varchar(25));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> insert into student (studentid, studentname, instructorid, studentcity) values (1, 'rahul', 101, 'pune'), (2, 'priya', 102, 'mumbai'), (3, 'amit', 101, 'pune'), (4, 'neha', null, 'bangalore'), (5, 'suresh', 104, 'delhi'), (6, 'anjali', 103, 'pune'), (7, 'vikas', null, 'chennai');
+Query OK, 7 rows affected (0.03 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from student;
++-----------+-------------+--------------+-------------+
+| studentid | studentname | instructorid | studentcity |
++-----------+-------------+--------------+-------------+
+|         1 | rahul       |          101 | pune        |
+|         2 | priya       |          102 | mumbai      |
+|         3 | amit        |          101 | pune        |
+|         4 | neha        |         NULL | bangalore   |
+|         5 | suresh      |          104 | delhi       |
+|         6 | anjali      |          103 | pune        |
+|         7 | vikas       |         NULL | chennai     |
++-----------+-------------+--------------+-------------+
+7 rows in set (0.00 sec)
+
+mysql> create table instructor(instructorid int primary key, instructorname varchar(20), instructorcity varchar(25), specialization varchar(30));
+Query OK, 0 rows affected (0.23 sec)
+
+mysql> insert into instructor(instructorid, instructorname, instructorcity, specialization) values (101, 'dr. sharma', 'pune', 'computer'), (102, 'prof. mehta', 'mumbai', 'mathematics'), (103, 'dr. verma', 'pune', 'physics'), (104, 'dr. kulkarni', 'delhi', 'computer'), (105, 'prof. reddy', 'hyderabad', 'electronics');
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from instructor;
++--------------+----------------+----------------+----------------+
+| instructorid | instructorname | instructorcity | specialization |
++--------------+----------------+----------------+----------------+
+|          101 | dr. sharma     | pune           | computer       |
+|          102 | prof. mehta    | mumbai         | mathematics    |
+|          103 | dr. verma      | pune           | physics        |
+|          104 | dr. kulkarni   | delhi          | computer       |
+|          105 | prof. reddy    | hyderabad      | electronics    |
++--------------+----------------+----------------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> alter table student add constraint fk_instructor foreign key (instructorid) references instructor(instructorid) on delete set null;
+Query OK, 7 rows affected (0.21 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+Find the instructor of each student.
+mysql> select s.studentid, s.studentname, i.instructorname, i.specialization from student s inner join instructor i on s.instructorid = i.instructorid;
++-----------+-------------+----------------+----------------+
+| studentid | studentname | instructorname | specialization |
++-----------+-------------+----------------+----------------+
+|         1 | rahul       | dr. sharma     | computer       |
+|         3 | amit        | dr. sharma     | computer       |
+|         2 | priya       | prof. mehta    | mathematics    |
+|         6 | anjali      | dr. verma      | physics        |
+|         5 | suresh      | dr. kulkarni   | computer       |
++-----------+-------------+----------------+----------------+
+5 rows in set (0.01 sec)
+
+Find the student who is not having any instructor.
+mysql> select s.studentid, s.studentname from student s left join instructor i on s.instructorid = i.instructorid where i.instructorid is null;
++-----------+-------------+
+| studentid | studentname |
++-----------+-------------+
+|         4 | neha        |
+|         7 | vikas       |
++-----------+-------------+
+2 rows in set (0.00 sec)
+
+Find the student who is not having any instructor as well as instructor who is not having student.
+mysql> select s.studentid, s.studentname, i.instructorname, i.specialization from student s inner join instructor i on s.instructorid = i.instructorid where i.specialization = 'computer';
++-----------+-------------+----------------+----------------+
+| studentid | studentname | instructorname | specialization |
++-----------+-------------+----------------+----------------+
+|         1 | rahul       | dr. sharma     | computer       |
+|         3 | amit        | dr. sharma     | computer       |
+|         5 | suresh      | dr. kulkarni   | computer       |
++-----------+-------------+----------------+----------------+
+3 rows in set (0.01 sec)
+
+Find the students whose instructor’s specialization is computer.
+mysql> select s.studentid, s.studentname, i.instructorid, i.instructorname from student s left join instructor i on s.instructorid = i.instructorid where i.instructorid is null union select s.studentid, s.studentname, i.instructorid, i.instructorname from instructor i left join student s on s.instructorid = i.instructorid where s.studentid is null;
++-----------+-------------+--------------+----------------+
+| studentid | studentname | instructorid | instructorname |
++-----------+-------------+--------------+----------------+
+|         4 | neha        |         NULL | NULL           |
+|         7 | vikas       |         NULL | NULL           |
+|      NULL | NULL        |          105 | prof. reddy    |
++-----------+-------------+--------------+----------------+
+3 rows in set (0.01 sec)
+
+Create a view containing total number of students whose instructor belongs to “Pune”.
+mysql> create view studentsunderpuneinstructors as select count(s.studentid) as total_students from student s inner join instructor i on s.instructorid = i.instructorid where i.instructorcity = 'pune';
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> select * from studentsunderpuneinstructors;
++----------------+
+| total_students |
++----------------+
+|              3 |
++----------------+
+1 row in set (0.01 sec)
+
+
+
+
+
+
+
+
+
+
+mysql> create table departments (department_id int (11) auto_increment primary key, department_name varchar (30) not null, location_id int (11) default null);
+Query OK, 0 rows affected, 2 warnings (0.07 sec)
+
+mysql> insert into departments (department_id, department_name, location_id) values (1, 'hr', 101), (2, 'it', 102), (3, 'finance', 103), (4, 'marketing', 104), (5, 'sales', 105);
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from departments;
++---------------+-----------------+-------------+
+| department_id | department_name | location_id |
++---------------+-----------------+-------------+
+|             1 | hr              |         101 |
+|             2 | it              |         102 |
+|             3 | finance         |         103 |
+|             4 | marketing       |         104 |
+|             5 | sales           |         105 |
++---------------+-----------------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> create table employees (employee_id int (11) auto_increment primary key, first_name varchar (20) default null, last_name varchar (25) not null, email varchar (100) not null, phone_number varchar (20) default null, hire_date date not null, job_id int (11) not null, salary decimal (8, 2) not null, manager_id int (11) default null, department_id int (11) default null, foreign key (department_id) references departments (department_id) on delete cascade on update cascade, foreign key (manager_id) references employees (employee_id));
+Query OK, 0 rows affected, 4 warnings (0.15 sec)
+
+mysql> insert into employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id) values (1, 'amit', 'sharma', 'amit.sharma@example.com', '9876543210', '2022-01-15', 101, 60000.00, null, 1), (2, 'priya', 'verma', 'priya.verma@example.com', '9823456789', '2021-05-20', 102, 75000.00, 1, 2), (3, 'raj', 'patel', 'raj.patel@example.com', '9812345678', '2020-08-30', 103, 82000.00, 1, 3), (4, 'neha', 'singh', 'neha.singh@example.com', '9801234567', '2019-11-10', 104, 72000.00, 2, 4), (5, 'suresh', 'reddy', 'suresh.reddy@example.com', '9791234567', '2023-04-25', 105, 68000.00, 2, 5), (6, 'anjali', 'desai', 'anjali.desai@example.com', '9781234567', '2022-07-12', 106, 70000.00, 3, 1), (7, 'vikas', 'kumar', 'vikas.kumar@example.com', '9771234567', '2021-03-18', 107, 78000.00, 3, 2), (8, 'manish', 'joshi', 'manish.joshi@example.com', '9761234567', '2018-06-05', 108, 90000.00, 4, 3), (9, 'swati', 'mehta', 'swati.mehta@example.com', '9751234567', '2020-09-14', 109, 67000.00, 4, 4), (10, 'rahul', 'gupta', 'rahul.gupta@example.com', '9741234567', '2019-12-22', 110, 85000.00, 5, 5);
+Query OK, 10 rows affected (0.02 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from employees;
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+| employee_id | first_name | last_name | email                    | phone_number | hire_date  | job_id | salary   | manager_id | department_id |
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+|           1 | amit       | sharma    | amit.sharma@example.com  | 9876543210   | 2022-01-15 |    101 | 60000.00 |       NULL |             1 |
+|           2 | priya      | verma     | priya.verma@example.com  | 9823456789   | 2021-05-20 |    102 | 75000.00 |          1 |             2 |
+|           3 | raj        | patel     | raj.patel@example.com    | 9812345678   | 2020-08-30 |    103 | 82000.00 |          1 |             3 |
+|           4 | neha       | singh     | neha.singh@example.com   | 9801234567   | 2019-11-10 |    104 | 72000.00 |          2 |             4 |
+|           5 | suresh     | reddy     | suresh.reddy@example.com | 9791234567   | 2023-04-25 |    105 | 68000.00 |          2 |             5 |
+|           6 | anjali     | desai     | anjali.desai@example.com | 9781234567   | 2022-07-12 |    106 | 70000.00 |          3 |             1 |
+|           7 | vikas      | kumar     | vikas.kumar@example.com  | 9771234567   | 2021-03-18 |    107 | 78000.00 |          3 |             2 |
+|           8 | manish     | joshi     | manish.joshi@example.com | 9761234567   | 2018-06-05 |    108 | 90000.00 |          4 |             3 |
+|           9 | swati      | mehta     | swati.mehta@example.com  | 9751234567   | 2020-09-14 |    109 | 67000.00 |          4 |             4 |
+|          10 | rahul      | gupta     | rahul.gupta@example.com  | 9741234567   | 2019-12-22 |    110 | 85000.00 |          5 |             5 |
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+10 rows in set (0.00 sec)
+
+1.	Find all employees who locate in the location with the id 1700
+mysql> select * from employees e join departments d on e.department_id = d.department_id where d.location_id = 1700;
+Empty set (0.00 sec)
+
+mysql> update departments set location_id = 1700 where department_name ='it';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+2.	 Find all employees who do not locate at the location 1700
+mysql> select e.* from employees e join departments d on e.department_id = d.department_id where d.location_id = 1700;
++-------------+------------+-----------+-------------------------+--------------+------------+--------+----------+------------+---------------+
+| employee_id | first_name | last_name | email                   | phone_number | hire_date  | job_id | salary   | manager_id | department_id |
++-------------+------------+-----------+-------------------------+--------------+------------+--------+----------+------------+---------------+
+|           2 | priya      | verma     | priya.verma@example.com | 9823456789   | 2021-05-20 |    102 | 75000.00 |          1 |             2 |
+|           7 | vikas      | kumar     | vikas.kumar@example.com | 9771234567   | 2021-03-18 |    107 | 78000.00 |          3 |             2 |
++-------------+------------+-----------+-------------------------+--------------+------------+--------+----------+------------+---------------+
+2 rows in set (0.00 sec)
+
+3.	Finds the employees who have the highest salary
+mysql> select e.* from employees e join departments d on e.department_id = d.department_id where d.location_id <> 1700;
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+| employee_id | first_name | last_name | email                    | phone_number | hire_date  | job_id | salary   | manager_id | department_id |
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+|           1 | amit       | sharma    | amit.sharma@example.com  | 9876543210   | 2022-01-15 |    101 | 60000.00 |       NULL |             1 |
+|           6 | anjali     | desai     | anjali.desai@example.com | 9781234567   | 2022-07-12 |    106 | 70000.00 |          3 |             1 |
+|           3 | raj        | patel     | raj.patel@example.com    | 9812345678   | 2020-08-30 |    103 | 82000.00 |          1 |             3 |
+|           8 | manish     | joshi     | manish.joshi@example.com | 9761234567   | 2018-06-05 |    108 | 90000.00 |          4 |             3 |
+|           4 | neha       | singh     | neha.singh@example.com   | 9801234567   | 2019-11-10 |    104 | 72000.00 |          2 |             4 |
+|           9 | swati      | mehta     | swati.mehta@example.com  | 9751234567   | 2020-09-14 |    109 | 67000.00 |          4 |             4 |
+|           5 | suresh     | reddy     | suresh.reddy@example.com | 9791234567   | 2023-04-25 |    105 | 68000.00 |          2 |             5 |
+|          10 | rahul      | gupta     | rahul.gupta@example.com  | 9741234567   | 2019-12-22 |    110 | 85000.00 |          5 |             5 |
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+8 rows in set (0.00 sec)
+
+
+4.	Finds all employees who salaries are greater than the average salary of all employees
+mysql> select * from employees where salary = (select max(salary) from employees);
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+| employee_id | first_name | last_name | email                    | phone_number | hire_date  | job_id | salary   | manager_id | department_id |
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+|           8 | manish     | joshi     | manish.joshi@example.com | 9761234567   | 2018-06-05 |    108 | 90000.00 |          4 |             3 |
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+1 row in set (0.01 sec)
+
+
+5.	Finds all departments which have at least one employee with the salary is greater than 10,000
+mysql> select * from employees where salary > (select avg(salary) from employees);
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+| employee_id | first_name | last_name | email                    | phone_number | hire_date  | job_id | salary   | manager_id | department_id |
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+|           2 | priya      | verma     | priya.verma@example.com  | 9823456789   | 2021-05-20 |    102 | 75000.00 |          1 |             2 |
+|           3 | raj        | patel     | raj.patel@example.com    | 9812345678   | 2020-08-30 |    103 | 82000.00 |          1 |             3 |
+|           7 | vikas      | kumar     | vikas.kumar@example.com  | 9771234567   | 2021-03-18 |    107 | 78000.00 |          3 |             2 |
+|           8 | manish     | joshi     | manish.joshi@example.com | 9761234567   | 2018-06-05 |    108 | 90000.00 |          4 |             3 |
+|          10 | rahul      | gupta     | rahul.gupta@example.com  | 9741234567   | 2019-12-22 |    110 | 85000.00 |          5 |             5 |
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+5 rows in set (0.00 sec)
+
+
+6.	Finds all departments that do not have any employee with the salary greater than 10,000
+mysql> select distinct d.* from departments d join employees e on d.department_id = e.department_id where e.salary > 10000;
++---------------+-----------------+-------------+
+| department_id | department_name | location_id |
++---------------+-----------------+-------------+
+|             1 | hr              |         101 |
+|             2 | it              |        1700 |
+|             3 | finance         |         103 |
+|             4 | marketing       |         104 |
+|             5 | sales           |         105 |
++---------------+-----------------+-------------+
+5 rows in set (0.00 sec)
+
+
+7.	Finds all employees whose salaries are greater than the lowest salary of every department
+mysql> select * from departments where department_id not in (select distinct department_id from employees where salary > 10000);
+Empty set (0.00 sec)
+
+
+8.	Finds all employees whose salaries are greater than or equal to the highest salary of every department
+mysql> select * from employees where salary > all (select min(salary) from employees group by department_id);
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+| employee_id | first_name | last_name | email                    | phone_number | hire_date  | job_id | salary   | manager_id | department_id |
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+|           8 | manish     | joshi     | manish.joshi@example.com | 9761234567   | 2018-06-05 |    108 | 90000.00 |          4 |             3 |
+|          10 | rahul      | gupta     | rahul.gupta@example.com  | 9741234567   | 2019-12-22 |    110 | 85000.00 |          5 |             5 |
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+2 rows in set (0.00 sec)
+
+
+9.	Finds the salaries of all employees, their average salary, and the difference between the salary of each employee and the average salary
+mysql> select * from employees where salary >= all ( select max(salary) from employees group by department_id );
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+| employee_id | first_name | last_name | email                    | phone_number | hire_date  | job_id | salary   | manager_id | department_id |
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+|           8 | manish     | joshi     | manish.joshi@example.com | 9761234567   | 2018-06-05 |    108 | 90000.00 |          4 |             3 |
++-------------+------------+-----------+--------------------------+--------------+------------+--------+----------+------------+---------------+
+1 row in set (0.00 sec)
+
+
+9.	Finds the salaries of all employees, their average salary, and the difference between the salary of each employee and the average salary
+mysql> select employee_id, first_name, last_name, salary, (select avg(salary) from employees) as average_salary, salary - (select avg(salary) from employees) as salary_difference from employees;
++-------------+------------+-----------+----------+----------------+-------------------+
+| employee_id | first_name | last_name | salary   | average_salary | salary_difference |
++-------------+------------+-----------+----------+----------------+-------------------+
+|           1 | amit       | sharma    | 60000.00 |   74700.000000 |     -14700.000000 |
+|           2 | priya      | verma     | 75000.00 |   74700.000000 |        300.000000 |
+|           3 | raj        | patel     | 82000.00 |   74700.000000 |       7300.000000 |
+|           4 | neha       | singh     | 72000.00 |   74700.000000 |      -2700.000000 |
+|           5 | suresh     | reddy     | 68000.00 |   74700.000000 |      -6700.000000 |
+|           6 | anjali     | desai     | 70000.00 |   74700.000000 |      -4700.000000 |
+|           7 | vikas      | kumar     | 78000.00 |   74700.000000 |       3300.000000 |
+|           8 | manish     | joshi     | 90000.00 |   74700.000000 |      15300.000000 |
+|           9 | swati      | mehta     | 67000.00 |   74700.000000 |      -7700.000000 |
+|          10 | rahul      | gupta     | 85000.00 |   74700.000000 |      10300.000000 |
++-------------+------------+-----------+----------+----------------+-------------------+
+10 rows in set (0.00 sec)
+
+mysql> notee;
